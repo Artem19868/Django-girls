@@ -14,6 +14,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Копирование проекта
 COPY . .
 
+# Создадим директорию для базы данных и дадим права
+RUN mkdir -p /app/data && \
+    chmod 777 /app/data
+
 # Переменные окружения
 ENV PYTHONUNBUFFERED=1
 ENV DJANGO_SETTINGS_MODULE=mysite.settings
@@ -21,5 +25,9 @@ ENV DJANGO_SETTINGS_MODULE=mysite.settings
 # Порт
 EXPOSE 8000
 
-# Запуск приложения
+# Создадим скрипт для запуска
+COPY entrypoint.sh .
+RUN chmod +x entrypoint.sh
+
+# Изменяем команду запуска напрямую
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
